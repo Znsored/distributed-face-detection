@@ -5,5 +5,7 @@ Builds an image of a worker node which returns a image with Delaunay traingles d
 Steps
 
 1. Pull repo and open terminal in the project directory
-2. Build Docker image with the command: docker build -t node:1.0 .
-3. Create a container using the create image: docker run --name worker1 -d -p 5554:5554 -p 5556:5556 node:1.0
+2. Change the ip address in .env file to the ip address manager node
+3. Build Docker image with the command: 
+ `docker build -t node:1.0 .`
+5. Create a container using the create image: `docker run --name worker1 -d -p 5554:5554 -p 5556:5556 node:1.0`
