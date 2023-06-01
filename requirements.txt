@@ -10,3 +10,4 @@ Werkzeug==2.0.3
 imutils==0.5.3
 pyzmq>=16
 logger
+os

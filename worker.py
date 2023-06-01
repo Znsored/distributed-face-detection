@@ -1,10 +1,20 @@
 import zmq
 from faceDetector import get_features
+import os
+
+string_template = "tcp://{ip}:{port}"
+
+in_ip = os.getenv("IN_IP")
+out_ip = os.getenv("OUT_IP")
+in_port = os.getenv("IN_PORT")
+out_port = os.getenv("OUT_PORT")
+
+
 
 def main():
     # Worker configuration
-    server_address = "tcp://10.0.0.87:5554"
-    worker_address = "tcp://10.0.0.87:5556"
+    server_address = string_template.format(ip=in_ip, port=in_port)
+    worker_address = string_template.format(ip=out_ip, port=out_port)
 
     context = zmq.Context()
 
