@@ -2,7 +2,7 @@
 Builds an image of a worker node which returns a image with Delaunay traingles drawn over a person's face
 
 
-##Instructions
+## Instructions
 1. Pull repo and open terminal in the project directory
 2. Change the ip address in .env file to the ip address manager node
 3. Build Docker image with the command: 
