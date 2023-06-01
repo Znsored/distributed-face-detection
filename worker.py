@@ -1,15 +1,17 @@
 import zmq
 from faceDetector import get_features
-import os
+from dotenv import dotenv_values
+import logging
 
 string_template = "tcp://{ip}:{port}"
+env_vars = dotenv_values('.env')
 
-in_ip = os.getenv("IN_IP")
-out_ip = os.getenv("OUT_IP")
-in_port = os.getenv("IN_PORT")
-out_port = os.getenv("OUT_PORT")
+in_ip = env_vars["IN_IP"]
+out_ip = env_vars["OUT_IP"]
+in_port = env_vars["IN_PORT"]
+out_port = env_vars["OUT_PORT"]
 
-
+logging.basicConfig(level=logging.INFO)
 
 def main():
     # Worker configuration
@@ -17,7 +19,7 @@ def main():
     worker_address = string_template.format(ip=out_ip, port=out_port)
 
     context = zmq.Context()
-
+    logging.info("running")
     # Create a PULL socket for receiving jobs from the server
     pull_socket = context.socket(zmq.PULL)
     pull_socket.connect(server_address)
@@ -27,15 +29,14 @@ def main():
     push_socket.connect(worker_address)
 
     while True:
+        logging.info("Waiting for Image")
         # Receive the job (image) from the server
         image_data = pull_socket.recv()
+        logging.info("Received Image, getting features")
         ack_data=get_features(image_data)
+        logging.info("Features Extracted")
         push_socket.send(ack_data)
-
-    # Close the sockets and terminate the context
-        pull_socket.close()
-        push_socket.close()
-        context.term()
+        logging.info("Successfully Sent Image")
 
 if __name__ == "__main__":
     main()

@@ -1,10 +1,15 @@
 import numpy as np
 import cv2
 import dlib
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
+predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+detector = dlib.get_frontal_face_detector()
+logging.info("Loaded Predictor and Detector")
 
 def get_features(frame_bytes):
-
-    predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
     try:
         # Convert the received data  to a NumPy array
         frame = np.frombuffer(frame_bytes, dtype=np.uint8)
@@ -13,9 +18,8 @@ def get_features(frame_bytes):
         # Convert the frame to grayscale
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-        detector = dlib.get_frontal_face_detector()
         faces = detector(gray)
-
+       
         # Iterate over the detected faces and extract the facial landmarks
         for face in faces:
             landmarks = predictor(gray, face)
@@ -47,6 +51,7 @@ def get_features(frame_bytes):
 
     except Exception as e:
         # Send the original frame back
+        logging.info("Error: {}".format(e))
         processed_frame_data = frame_bytes
 
     # Send the processed frame data back to the main node
