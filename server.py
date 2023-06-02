@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import json
 import base64
-from face import get_features
+from faceDetector import get_features
 import time
 
 def main():
