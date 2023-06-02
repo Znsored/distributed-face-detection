@@ -8,7 +8,7 @@ import base64
 from flask import Flask, request
 
 app = Flask(__name__)
-sa
+
 def process_video(video_path):
     # Server configuration
     server_address = ["tcp://*:5554", "tcp://*:5555"]
