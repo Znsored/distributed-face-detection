@@ -43,10 +43,10 @@ while True:
     message = consumer.poll(1.0)
 
     if message is None:
-        time.wait(3.0)
+        time.sleep(3)
     message = consumer.poll(1.0)
     if message is None:
-        time.wait(3.0)
+        time.sleep(3)
         continue
 
     if message.error():
