@@ -1,4 +1,4 @@
-# workerNode
+# Distributed Face Detection
 Builds an image of a worker node which returns a image with Delaunay traingles drawn over a person's face
 
 
