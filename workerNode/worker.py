@@ -5,6 +5,7 @@ import json
 import time
 from faceDetector import get_features
 from dotenv import dotenv_values
+from message import sendResponse
 
 logging.basicConfig(level=logging.INFO)
 
@@ -87,7 +88,7 @@ while True:
 
 
         #push_socket.send(ack_json.encode())
-    
+    sendResponse(ack_json)
     logging.info(f"Successfully Sent Image in {time_taken}")
 
 

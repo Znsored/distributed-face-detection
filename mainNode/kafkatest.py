@@ -43,3 +43,4 @@ for i in range(10):
 
 #flush messages and close connection
 producer.flush()
+startConsuming()
