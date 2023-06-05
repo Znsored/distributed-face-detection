@@ -3,6 +3,8 @@ import base64
 import logging
 import json
 import time
+import numpy as np
+import cv2
 
 logging.basicConfig(level=logging.INFO)
 def start_consuming():
@@ -12,7 +14,7 @@ def start_consuming():
 # Create consumer configuration
     consumer_config = {
         'bootstrap.servers': bootstrap_servers,
-        'group.id': 'my_consumer_3',
+        'group.id': 'my_consumer_2',
         'auto.offset.reset': 'earliest'
     }
 
@@ -31,10 +33,6 @@ def start_consuming():
         message = consumer.poll(1.0)
 
         if message is None:
-            time.sleep(3)
-        message = consumer.poll(1.0)
-        if message is None:
-            time.sleep(3)
             continue
 
         if message.error():
@@ -42,6 +40,7 @@ def start_consuming():
             continue
 
     # Decode the image from the message value
+        logging.info("response received")
         json_message = message.value().decode('utf-8')
         try:
             job_data = json.loads(json_message)
@@ -55,8 +54,15 @@ def start_consuming():
 
     # Decode the image from Base64
         image_data = base64.b64decode(image_base64)
+        nparr = np.frombuffer(image_data, np.uint8)
+
+# Decode the NumPy array to an OpenCV image
+        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+# Display the image
+        cv2.imshow("Image", image)
+        cv2.waitKey(0)
         
-        logging.info("response received")
         logging.info(f"frame: {frame_id}, worker id: {worker_id}, time taken:{time_taken}")
         
     

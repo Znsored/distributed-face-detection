@@ -1,6 +1,8 @@
 import json
 import base64
 from confluent_kafka import Producer
+from storeResponse import start_consuming
+import time
 
     # Server configuration
 bootstrap_servers = '10.0.0.22:9093'
@@ -26,7 +28,7 @@ with open(path,'rb') as file:
 if img is None:
     print("img empty")
 
-for i in range(10):
+for i in range(2):
 
     job_count = i
     # Convert the frame data to base64
@@ -42,5 +44,6 @@ for i in range(10):
     producer.produce(topic, value=job_json.encode('utf-8'))
 
 #flush messages and close connection
+
 producer.flush()
-startConsuming()
+start_consuming()

@@ -33,5 +33,5 @@ services:
       KAFKA_JMX_HOSTNAME: localhost
 
       ### Kafka partition config
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
+      #KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       KAFKA_NUM_PARTITIONS: 2
