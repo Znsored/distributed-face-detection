@@ -10,7 +10,7 @@ def sendResponse(job_json):
 # Create producer configuration
     producer_config = {
       'bootstrap.servers': bootstrap_servers,
-      'client.id': 'my_producer_1'
+      'client.id': 'processed_frame_producer'
     }
 
 # Create the Kafka producer instance
@@ -20,7 +20,7 @@ def sendResponse(job_json):
 # Kafka topic to produce to
     topic = 'response'
     # prepare messages to be sent to worker     
-    producer.produce(topic, value=job_json.encode('utf-8'))
+    producer.produce(topic, value=job_json.encode('utf-8'), partition=1)
 
 #flush messages and close connection
     producer.flush()

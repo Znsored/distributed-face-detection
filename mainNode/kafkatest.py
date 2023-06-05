@@ -10,7 +10,7 @@ bootstrap_servers = '10.0.0.22:9093'
 # Create producer configuration
 producer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'client.id': 'my_producer'
+    'client.id': 'fresh_frame_producer'
 }
 
 # Create the Kafka producer instance
@@ -18,7 +18,7 @@ producer_config = {
 producer = Producer(producer_config)
 
 # Kafka topic to produce to
-topic = 'my_topic'
+topic = 'request'
 
 path = r'F:\\img.jpg'
  

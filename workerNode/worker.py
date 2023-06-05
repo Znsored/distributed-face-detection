@@ -25,7 +25,7 @@ logging.info(bootstrap_servers)
 # Create consumer configuration
 consumer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'group.id': 'my_consumer',
+    'group.id': 'fresh_frame_consumer_1',
     'auto.offset.reset': 'earliest'
 }
 
@@ -33,7 +33,7 @@ consumer_config = {
 consumer = Consumer(consumer_config)
 
 # Kafka topic to consume from
-topic = 'my_topic'
+topic = 'request'
 
 # Subscribe to the Kafka topic
 consumer.subscribe([topic])
@@ -63,6 +63,7 @@ while True:
         continue
     frame_id = job_data['frame_id']
     image_base64 = job_data['image']
+    machine_id = job_data['machine_id']
 
     # Decode the image from Base64
     image_data = base64.b64decode(image_base64)
@@ -81,7 +82,7 @@ while True:
     ack_data = {
         'frame_id': frame_id,
         'time_taken': time_taken,
-        'worker_id': 1,
+        'worker_id': machine_id,
         'image': processed_image_base64
     }
     ack_json = json.dumps(ack_data)

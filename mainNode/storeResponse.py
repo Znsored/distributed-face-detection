@@ -14,7 +14,7 @@ def start_consuming():
 # Create consumer configuration
     consumer_config = {
         'bootstrap.servers': bootstrap_servers,
-        'group.id': 'my_consumer_2',
+        'group.id': 'processed_frame_consumer',
         'auto.offset.reset': 'earliest'
     }
 
