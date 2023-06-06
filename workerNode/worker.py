@@ -15,15 +15,17 @@ env_vars = dotenv_values('.env')
 
 ip = env_vars["IP"]
 port = env_vars["PORT"]
+machine_id = env_vars['MACHINE_ID']
 
 # Kafka broker(s) configuration
 bootstrap_servers = string_template.format(ip=ip, port=port)
+
 logging.info(bootstrap_servers)
 
 # Create consumer configuration
 consumer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'group.id': 'fresh_frame_consumer_1',
+    'group.id': 'fresh_frame_producer_1',
     'auto.offset.reset': 'earliest'
 }
 
@@ -42,10 +44,6 @@ while True:
     message = consumer.poll(1.0)
 
     if message is None:
-        time.sleep(3)
-    message = consumer.poll(1.0)
-    if message is None:
-        time.sleep(3)
         continue
 
     if message.error():
@@ -57,11 +55,11 @@ while True:
     try:
         job_data = json.loads(json_message)
     except json.JSONDecodeError as e:
-        #print(f"Error decoding JSON message: {e}")
+        logging.info(f"Error decoding JSON message: {e}")
         continue
     frame_id = job_data['frame_id']
     image_base64 = job_data['image']
-    machine_id = job_data['machine_id']
+    
 
     # Decode the image from Base64
     image_data = base64.b64decode(image_base64)
