@@ -41,20 +41,16 @@ cursor = conn.cursor()
 def send_kafka():
     topic = 'request'
 
-    select_query = "SELECT img FROM init_frames WHERE frame_id = %s"
-    cursor.execute(select_query, (image_id,))
-    result = cursor.fetchone()
+    select_query = "SELECT img FROM init_frames"
+    cursor.execute(select_query)
+    result = cursor.fetchall()
+    count = 0
 
-    with open(path,'rb') as file:
-        img = file.read()
-    if img is None:
-        print("img empty")
-
-    for i in range(2):
-
-        job_count = i
+    for image in result:
+        count = count+1
+        job_count = count
         # Convert the frame data to base64
-        frame_base64 = base64.b64encode(img).decode('utf-8')
+        frame_base64 = base64.b64encode(image).decode('utf-8')
         # Prepare the job data in JSON format
         job_data = {
                 'frame_id': job_count,
@@ -70,8 +66,8 @@ def send_kafka():
 
 def store_frame(frame_id, frame_data):
     # Insert the frame into the table with the provided frame_id
-
     cursor.execute("INSERT INTO init_frames (frame_id, image) VALUES (%s, %s)", (frame_id, frame_data))
+
 @app.route('/process_video', methods=['POST'])
 def process_video_route():
     if 'video' not in request.files:

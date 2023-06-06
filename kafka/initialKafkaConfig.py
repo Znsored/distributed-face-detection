@@ -18,9 +18,7 @@ def create_topic(topic_name, num_partitions, replication_factor):
     
     # Create the topic using the AdminClient
     admin_client.create_topics([topic])
-    
-    # Close the AdminClient
-    admin_client.close()
+
 
 # Example usage to create two topics with different partitions
 create_topic("request", 2, 1)  # Create "topic1" with 2 partitions and replication factor 1
