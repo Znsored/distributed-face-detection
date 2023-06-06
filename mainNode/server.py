@@ -1,7 +1,7 @@
 import json
 import base64
 from confluent_kafka import Producer
-from storeResponse import start_consuming
+#from storeResponse import start_consuming
 import time
 import psycopg2
 import cv2
@@ -22,8 +22,8 @@ string_template = "{ip}:{port}"
 env_vars = dotenv_values('.env')
 
 
-ip = env_vars["IP"]
-port = env_vars["PORT"]
+ip = "10.0.0.22"
+port = "9093"
 bootstrap_servers = string_template.format(ip=ip, port=port)
 
 # Create producer configuration
@@ -50,11 +50,11 @@ def send_kafka():
 
     select_query = "SELECT image FROM init_frames"
     cursor.execute(select_query)
-    result = cursor.fetchall()[0]
+    result = cursor.fetchall()
     count = 0
 
     for image in result:
-        image=bytes(image)
+        image=bytes(image[0])
         count = count+1
         job_count = count
         # Convert the frame data to base64
@@ -68,9 +68,8 @@ def send_kafka():
 
         # prepare messages to be sent to worker
         producer.produce(topic, value=job_json.encode('utf-8'))
-        
         producer.flush()
-    start_consuming()
+    
 
 def store_frame(frame_id, frame_data):
     # Insert the frame into the table with the provided frame_id

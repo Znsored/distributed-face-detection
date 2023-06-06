@@ -1,0 +1,2 @@
+from storeResponse import start_consuming
+start_consuming()

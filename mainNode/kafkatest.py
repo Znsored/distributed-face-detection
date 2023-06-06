@@ -10,8 +10,8 @@ string_template = "{ip}:{port}"
 env_vars = dotenv_values('mainNode/.env')
 
 
-ip = env_vars["IP"]
-port = env_vars["PORT"]
+ip = "10.0.0.22"
+port = "9093"
 bootstrap_servers = string_template.format(ip=ip, port=port)
 
 # Create producer configuration

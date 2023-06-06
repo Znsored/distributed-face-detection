@@ -14,8 +14,8 @@ def start_consuming():
     env_vars = dotenv_values('mainNode/.env')
 
 
-    ip = env_vars["IP"]
-    port = env_vars["PORT"]
+    ip = "10.0.0.22"
+    port = "9093"
 
     # Kafka broker(s) configuration
     bootstrap_servers = string_template.format(ip=ip, port=port)
@@ -39,7 +39,7 @@ def start_consuming():
 
 # Consume messages from the Kafka topic
     while True:
-        logging.info("waiting for message")
+        logging.info("waiting for message inside kafkatest")
         message = consumer.poll(1.0)
 
         if message is None:
