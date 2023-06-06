@@ -6,6 +6,7 @@ import time
 import psycopg2
 import cv2
 from flask import Flask, request
+from dotenv import dotenv_values
 
 # Create a Flask app
 app = Flask(__name__)
@@ -17,13 +18,18 @@ conn = psycopg2.connect("dbname=frames_get user=postgres password=root")
 cursor = conn.cursor()
 
     # Server configuration
-bootstrap_servers = '10.0.0.22:9093'
+string_template = "{ip}:{port}"
+env_vars = dotenv_values('.env')
+
+
+ip = env_vars["IP"]
+port = env_vars["PORT"]
+bootstrap_servers = string_template.format(ip=ip, port=port)
 
 # Create producer configuration
 producer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'client.id': 'fresh_frame_producer',
-    'max.message.bytes': 1000000
+    'client.id': 'fresh_frame_producer'
 }
 
 # # Create the Kafka producer instance

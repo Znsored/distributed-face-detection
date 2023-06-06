@@ -6,18 +6,26 @@ import numpy as np
 import cv2
 from databaseOperations import store_processed_frames
 from confluent_kafka import Consumer
+from dotenv import dotenv_values
 
 logging.basicConfig(level=logging.INFO)
 def start_consuming():
-    bootstrap_servers = "10.0.0.22:9093"
+    string_template = "{ip}:{port}"
+    env_vars = dotenv_values('.env')
+
+
+    ip = env_vars["IP"]
+    port = env_vars["PORT"]
+
+    # Kafka broker(s) configuration
+    bootstrap_servers = string_template.format(ip=ip, port=port)
     logging.info(bootstrap_servers)
 
 # Create consumer configuration
     consumer_config = {
         'bootstrap.servers': bootstrap_servers,
         'group.id': 'processed_frame_consumer',
-        'auto.offset.reset': 'earliest',
-        'max.message.bytes': 1000000
+        'auto.offset.reset': 'earliest'
     }
 
 # Create the Kafka consumer instance

@@ -16,8 +16,6 @@ env_vars = dotenv_values('.env')
 ip = env_vars["IP"]
 port = env_vars["PORT"]
 
-logging.basicConfig(level=logging.INFO)
-
 # Kafka broker(s) configuration
 bootstrap_servers = string_template.format(ip=ip, port=port)
 logging.info(bootstrap_servers)
@@ -26,8 +24,7 @@ logging.info(bootstrap_servers)
 consumer_config = {
     'bootstrap.servers': bootstrap_servers,
     'group.id': 'fresh_frame_consumer_1',
-    'auto.offset.reset': 'earliest',
-    'max.message.bytes': 1000000
+    'auto.offset.reset': 'earliest'
 }
 
 # Create the Kafka consumer instance

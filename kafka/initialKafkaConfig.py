@@ -1,9 +1,20 @@
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka.admin import AdminClient, NewTopic, ConfigResource
+from dotenv import dotenv_values
+
+    # Server configuration
+string_template = "{ip}:{port}"
+env_vars = dotenv_values('.env')
+
+
+ip = env_vars["IP"]
+port = env_vars["PORT"]
+bootstrap_servers = string_template.format(ip=ip, port=port)
+
 
 def create_topic(topic_name, num_partitions, replication_factor):
     # Set up the AdminClient configuration
     admin_config = {
-        'bootstrap.servers': '10.0.0.22:9093'  # Replace with your Kafka bootstrap servers
+        'bootstrap.servers': bootstrap_servers# Replace with your Kafka bootstrap servers
     }
     
     # Create an instance of the AdminClient
