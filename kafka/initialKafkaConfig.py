@@ -1,4 +1,4 @@
-from confluent_kafka.admin import AdminClient, NewTopic, ConfigResource
+from confluent_kafka.admin import AdminClient, NewTopic
 from dotenv import dotenv_values
 
     # Server configuration
@@ -28,7 +28,7 @@ def create_topic(topic_name, num_partitions, replication_factor):
     )
     
     # Create the topic using the AdminClient
-    admin_client.create_topics([topic])
+    admin_client.create_topics(topic)
 
 
 # Example usage to create two topics with different partitions
