@@ -8,7 +8,7 @@ import cv2
 from flask import Flask, request
 
 # Create a Flask app
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect("dbname=frames_get user=postgres password=root")
@@ -41,12 +41,13 @@ cursor = conn.cursor()
 def send_kafka():
     topic = 'request'
 
-    select_query = "SELECT img FROM init_frames"
+    select_query = "SELECT image FROM init_frames"
     cursor.execute(select_query)
-    result = cursor.fetchall()
+    result = cursor.fetchall()[0]
     count = 0
 
     for image in result:
+        image=bytes(image)
         count = count+1
         job_count = count
         # Convert the frame data to base64
@@ -105,11 +106,11 @@ def process_video_route():
 
     # Close the video capture, cursor, and connection
     vidcap.release()
+    send_kafka()
     cursor.close()
     conn.close()
-    send_kafka()
     return f"Video processed successfully. {frame_count} frames stored in the database."
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     app.run(port=5000)
