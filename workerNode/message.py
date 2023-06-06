@@ -20,7 +20,7 @@ def sendResponse(job_json):
 # Kafka topic to produce to
     topic = 'response'
     # prepare messages to be sent to worker     
-    producer.produce(topic, value=job_json.encode('utf-8'), partition=1)
+    producer.produce(topic, value=job_json.encode('utf-8'))
 
 #flush messages and close connection
     producer.flush()
