@@ -16,7 +16,8 @@ def start_consuming():
     consumer_config = {
         'bootstrap.servers': bootstrap_servers,
         'group.id': 'processed_frame_consumer',
-        'auto.offset.reset': 'earliest'
+        'auto.offset.reset': 'earliest',
+        'max.message.bytes': 1000000
     }
 
 # Create the Kafka consumer instance

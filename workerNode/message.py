@@ -10,7 +10,8 @@ def sendResponse(job_json):
 # Create producer configuration
     producer_config = {
       'bootstrap.servers': bootstrap_servers,
-      'client.id': 'processed_frame_producer'
+      'client.id': 'processed_frame_producer',
+      'max.message.bytes': 1000000
     }
 
 # Create the Kafka producer instance

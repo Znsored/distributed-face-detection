@@ -26,7 +26,8 @@ logging.info(bootstrap_servers)
 consumer_config = {
     'bootstrap.servers': bootstrap_servers,
     'group.id': 'fresh_frame_consumer_1',
-    'auto.offset.reset': 'earliest'
+    'auto.offset.reset': 'earliest',
+    'max.message.bytes': 1000000
 }
 
 # Create the Kafka consumer instance

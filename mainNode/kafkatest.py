@@ -10,7 +10,8 @@ bootstrap_servers = '10.0.0.22:9093'
 # Create producer configuration
 producer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'client.id': 'fresh_frame_producer'
+    'client.id': 'fresh_frame_producer',
+    'max.message.bytes': 1000000
 }
 
 # Create the Kafka producer instance

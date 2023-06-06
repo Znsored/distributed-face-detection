@@ -22,7 +22,8 @@ bootstrap_servers = '10.0.0.22:9093'
 # Create producer configuration
 producer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'client.id': 'my_producer'
+    'client.id': 'fresh_frame_producer',
+    'max.message.bytes': 1000000
 }
 
 # # Create the Kafka producer instance
@@ -62,7 +63,7 @@ def send_kafka():
         # prepare messages to be sent to worker
         producer.produce(topic, value=job_json.encode('utf-8'))
         
-    producer.flush()
+        producer.flush()
     start_consuming()
 
 def store_frame(frame_id, frame_data):
