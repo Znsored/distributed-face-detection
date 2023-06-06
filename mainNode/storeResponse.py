@@ -1,10 +1,11 @@
-from confluent_kafka import Consumer
 import base64
 import logging
 import json
 import time
 import numpy as np
 import cv2
+from databaseOperations import store_processed_frames
+from confluent_kafka import Consumer
 
 logging.basicConfig(level=logging.INFO)
 def start_consuming():
@@ -54,14 +55,10 @@ def start_consuming():
 
     # Decode the image from Base64
         image_data = base64.b64decode(image_base64)
-        nparr = np.frombuffer(image_data, np.uint8)
-
-# Decode the NumPy array to an OpenCV image
-        image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+        store_processed_frames(frame_id,time_taken,worker_id,image_data)
 
 # Display the image
-        cv2.imshow("Image", image)
-        cv2.waitKey(0)
+       
         
         logging.info(f"frame: {frame_id}, worker id: {worker_id}, time taken:{time_taken}")
         
