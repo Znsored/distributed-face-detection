@@ -7,7 +7,7 @@ import time
 
     # Server configuration
 string_template = "{ip}:{port}"
-env_vars = dotenv_values('.env')
+env_vars = dotenv_values('mainNode/.env')
 
 
 ip = env_vars["IP"]
@@ -27,13 +27,14 @@ producer = Producer(producer_config)
 # Kafka topic to produce to
 topic = 'request'
 
-path = r'F:\\img.jpg'
+path = r'C:\\Users\\athre\\Desktop\\docker\\workerNode\\mainNode\\image.jpeg'
  
 
 with open(path,'rb') as file:
     img = file.read()
 if img is None:
     print("img empty")
+job_count=1
 
 for i in range(2):
 
@@ -53,4 +54,4 @@ for i in range(2):
 #flush messages and close connection
 
 producer.flush()
-start_consuming()
+# start_consuming()

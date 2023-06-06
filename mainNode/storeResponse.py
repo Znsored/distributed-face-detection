@@ -11,7 +11,7 @@ from dotenv import dotenv_values
 logging.basicConfig(level=logging.INFO)
 def start_consuming():
     string_template = "{ip}:{port}"
-    env_vars = dotenv_values('.env')
+    env_vars = dotenv_values('mainNode/.env')
 
 
     ip = env_vars["IP"]
@@ -64,7 +64,7 @@ def start_consuming():
 
     # Decode the image from Base64
         image_data = base64.b64decode(image_base64)
-        store_processed_frames(frame_id,time_taken,worker_id,image_data)
+        store_processed_frames(1,frame_id,time_taken,worker_id,image_data)
 
 # Display the image
        
