@@ -96,8 +96,8 @@ def index():
     if request.method == "GET":
         return render_template("index.html", result={})
     else:
-        if 'video' not in request.files:
-            return "No video file provided", 400
+        # if 'video' not in request.files:
+        #     return "No video file provided", 400
 
         video_file = request.files['video']
         video_path = 'uploaded_video.mp4'
@@ -138,7 +138,7 @@ def index():
         conn.close()
         # time.sleep(20)
         #construct_vid(task_id)
-        os.remove(path)
+        # os.remove(path)
         return render_template("index.html", result="done")
         
 
