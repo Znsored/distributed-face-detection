@@ -1,4 +1,4 @@
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka.admin import AdminClient, NewTopic, Consumer
 from dotenv import dotenv_values
 
     # Server configuration
@@ -26,11 +26,28 @@ def create_topic(topic_name, num_partitions, replication_factor):
         num_partitions=num_partitions,
         replication_factor=replication_factor
     )
+    consummer_config = {
+    'bootstrap.servers': bootstrap_servers,
+    'group.id': 'check_topics'
+    }
+    consumer = Consumer(consummer_config)
+    
     
     # Create the topic using the AdminClient
     admin_client.create_topics(topic)
+
+    #list all topics
+    consumer.list_topics().topics
 
 
 # Example usage to create two topics with different partitions
 create_topic("request", 2, 1)  # Create "topic1" with 2 partitions and replication factor 1
 create_topic("response", 1, 1)  # Create "topic2" with 4 partitions and replication factor 1
+
+
+consummer_config = {
+    'bootstrap.servers': bootstrap_servers,
+    'group.id': 'check_topics'
+}
+consumer = Consumer(consummer_config)
+consumer.list_topics().topics
