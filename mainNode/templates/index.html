@@ -17,7 +17,13 @@
             <p>{{ result.error }}</p>
         {% elif result %}
             <!-- <p><img src="{{ result.image_with_landmarks }}" alt="face with landmarks"/></p> -->
-            <p>{{ result }}</p>
+            <p><source src="{{ video_path }}" type="video/avi"></p>
+            <h1>Statistics:</h1>
+                {% for record in stats%}
+                <h2>Worker ID: {{ record.worker_id }}</h2>
+                <p>Number of Frames Processed: {{ record.frames_processed }}</p>
+                <p>Average Job Time: {{ record.location }}</p><br>
+                 {% endfor %}
         {% else  %}
             <p>The results will be placed here</p>
         {% endif %}

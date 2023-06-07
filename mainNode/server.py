@@ -12,6 +12,7 @@ from dotenv import dotenv_values
 import random
 from constructvideo import construct_vid
 from storeResponse import start_consuming
+from databaseOperations import get_statistics
 
 
 
@@ -136,10 +137,10 @@ def index():
         send_kafka(task_id)
         cursor.close()
         conn.close()
-        # time.sleep(20)
-        #construct_vid(task_id)
-        # os.remove(path)
-        return render_template("index.html", result="done")
+        
+        video_path = 'video.avi'  # Path to your video file
+        stats = get_statistics(task_id)
+        return render_template("index.html", result=video_path, stats = stats)
         
 
         
