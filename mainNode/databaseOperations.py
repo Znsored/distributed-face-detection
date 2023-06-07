@@ -53,3 +53,26 @@ def get_frame_count(task_id):
             cursor.close()
             connection.close()
         return count
+    
+def get_saved_frame_count(task_id):
+    try:
+        connection = psycopg2.connect(
+            database="frames_get",
+            user="postgres",
+            password="root",
+            host="localhost",
+            port="5432")
+        cursor = connection.cursor()
+        query = "SELECT COUNT(*) FROM frames WHERE task_id = %s"
+
+    # Execute the query with the primary key value
+        cursor.execute(query, (task_id,))
+        count = cursor.fetchone()[0]
+    except (Exception, psycopg2.Error) as error:
+        logging.info("Failed to read from database", error)
+    finally:
+    # closing database connection.
+        if connection:
+            cursor.close()
+            connection.close()
+    return count

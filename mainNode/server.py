@@ -10,6 +10,7 @@ from flask import Flask, request
 from dotenv import dotenv_values
 import random
 from constructvideo import construct_vid
+from storeResponse import start_consuming
 # Create a Flask app
 app = Flask(__name__)
 
@@ -72,7 +73,7 @@ def send_kafka(task_id):
         # prepare messages to be sent to worker
         producer.produce(topic, value=job_json.encode('utf-8'))
         producer.flush()
-    return None
+    start_consuming()
     
 
 def store_frame(task_id, frame_id, frame_data):
@@ -121,7 +122,7 @@ def process_video_route():
     send_kafka(task_id)
     cursor.close()
     conn.close()
-    time.sleep(20)
+    # time.sleep(20)
     #construct_vid(task_id)
     return f"Video processed successfully. {frame_count} frames stored in the database."
 

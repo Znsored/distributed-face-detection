@@ -4,10 +4,11 @@ import json
 import time
 import numpy as np
 import cv2
-from databaseOperations import store_processed_frames, get_frame_count
+from databaseOperations import store_processed_frames, get_frame_count,get_saved_frame_count
 from constructvideo import construct_vid
 from confluent_kafka import Consumer
 from dotenv import dotenv_values
+
 
 logging.basicConfig(level=logging.INFO)
 def start_consuming():
@@ -67,12 +68,14 @@ def start_consuming():
     # Decode the image from Base64
         image_data = base64.b64decode(image_base64)
         store_processed_frames(task_id,frame_id,time_taken,worker_id,image_data)
-
         logging.info(f"frame: {frame_id}, worker id: {worker_id}, time taken:{time_taken}")
     # Display the image
         frame_count = get_frame_count(task_id)
-        if frame_count == frame_id:
-            construct_vid(task_id)
+        print(frame_count)
+        logging.info(frame_count)
+        if get_saved_frame_count(task_id) == get_frame_count(task_id):
+            break
+    construct_vid(task_id)
     # Process the image data
     # ...
 
