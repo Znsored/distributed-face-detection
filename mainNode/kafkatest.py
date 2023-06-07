@@ -4,6 +4,10 @@ from confluent_kafka import Producer
 from storeResponse import start_consuming
 from dotenv import dotenv_values
 import time
+import uuid
+
+task_id = uuid.uuid4()
+
 
     # Server configuration
 string_template = "{ip}:{port}"
@@ -28,7 +32,8 @@ producer = Producer(producer_config)
 topic = 'request'
 
 path = r'C:\\Users\\athre\\Desktop\\docker\\workerNode\\mainNode\\image.jpeg'
- 
+
+task_id = uuid.uuid4()
 
 with open(path,'rb') as file:
     img = file.read()
@@ -43,6 +48,7 @@ for i in range(2):
     frame_base64 = base64.b64encode(img).decode('utf-8')
     # Prepare the job data in JSON format
     job_data = {
+            'task_id' : task_id,
             'frame_id': job_count,
             'image': frame_base64
         }

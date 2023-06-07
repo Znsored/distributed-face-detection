@@ -61,10 +61,11 @@ def start_consuming():
         image_base64 = job_data['image']
         worker_id = job_data['worker_id']
         time_taken = job_data['time_taken']
+        task_id = job_data['task_id']
 
     # Decode the image from Base64
         image_data = base64.b64decode(image_base64)
-        store_processed_frames(1,frame_id,time_taken,worker_id,image_data)
+        store_processed_frames(task_id,frame_id,time_taken,worker_id,image_data)
 
 # Display the image
        

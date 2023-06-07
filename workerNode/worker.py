@@ -25,7 +25,7 @@ logging.info(bootstrap_servers)
 # Create consumer configuration
 consumer_config = {
     'bootstrap.servers': bootstrap_servers,
-    'group.id': 'fresh_frame_producer_1',
+    'group.id': 'fresh_frame_producer',
     'auto.offset.reset': 'earliest'
 }
 
@@ -59,6 +59,7 @@ while True:
         continue
     frame_id = job_data['frame_id']
     image_base64 = job_data['image']
+    task_id = job_data['task_id']
     
 
     # Decode the image from Base64

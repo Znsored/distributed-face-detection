@@ -5,6 +5,7 @@ from confluent_kafka import Producer
 import time
 import psycopg2
 import cv2
+import uuid
 from flask import Flask, request
 from dotenv import dotenv_values
 
@@ -19,7 +20,7 @@ cursor = conn.cursor()
 
     # Server configuration
 string_template = "{ip}:{port}"
-env_vars = dotenv_values('.env')
+env_vars = dotenv_values('mainNode/.env')
 
 
 ip = "10.0.0.22"
@@ -45,11 +46,11 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 # Kafka topic to produce to
-def send_kafka():
+def send_kafka(task_id):
     topic = 'request'
 
-    select_query = "SELECT image FROM init_frames"
-    cursor.execute(select_query)
+    #select_query = ""
+    cursor.execute("SELECT image FROM init_frames WHERE task_id = (task_id) VALUES (%s)",(task_id))
     result = cursor.fetchall()
     count = 0
 
@@ -61,6 +62,7 @@ def send_kafka():
         frame_base64 = base64.b64encode(image).decode('utf-8')
         # Prepare the job data in JSON format
         job_data = {
+                'task_id' : task_id,
                 'frame_id': job_count,
                 'image': frame_base64
             }
@@ -71,9 +73,9 @@ def send_kafka():
         producer.flush()
     
 
-def store_frame(frame_id, frame_data):
+def store_frame(task_id, frame_id, frame_data):
     # Insert the frame into the table with the provided frame_id
-    cursor.execute("INSERT INTO init_frames (frame_id, image) VALUES (%s, %s)", (frame_id, frame_data))
+    cursor.execute("INSERT INTO init_frames (task_id, frame_id, image) VALUES (%s, %s, %s)", (task_id,frame_id, frame_data))
 
 @app.route('/process_video', methods=['POST'])
 def process_video_route():
@@ -88,6 +90,7 @@ def process_video_route():
     vidcap = cv2.VideoCapture(video_path)
     success, frame = vidcap.read()
     frame_count = 0
+    task_id = uuid.uuid4()
 
     # Initial frame_id
     frame_id = 1
@@ -98,7 +101,7 @@ def process_video_route():
         frame_data = buffer.tobytes()
 
         # Store the frame in the database with the current frame_id
-        store_frame(frame_id, frame_data)
+        store_frame(task_id, frame_id, frame_data)
 
         # Read the next frame
         success, frame = vidcap.read()
@@ -112,7 +115,7 @@ def process_video_route():
 
     # Close the video capture, cursor, and connection
     vidcap.release()
-    send_kafka()
+    send_kafka(task_id)
     cursor.close()
     conn.close()
     return f"Video processed successfully. {frame_count} frames stored in the database."
