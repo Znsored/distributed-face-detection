@@ -9,6 +9,7 @@ import uuid
 from flask import Flask, request
 from dotenv import dotenv_values
 import random
+from constructvideo import construct_vid
 # Create a Flask app
 app = Flask(__name__)
 
@@ -50,7 +51,7 @@ def send_kafka(task_id):
     topic = 'request'
 
     #select_query = ""
-    cursor.execute("SELECT image FROM save_frames WHERE task_id = task_id")
+    cursor.execute("SELECT image FROM save_frames WHERE task_id = (%s)",(task_id,))
     result = cursor.fetchall()
     count = 0
 
@@ -71,6 +72,7 @@ def send_kafka(task_id):
         # prepare messages to be sent to worker
         producer.produce(topic, value=job_json.encode('utf-8'))
         producer.flush()
+    return None
     
 
 def store_frame(task_id, frame_id, frame_data):
@@ -90,8 +92,9 @@ def process_video_route():
     vidcap = cv2.VideoCapture(video_path)
     success, frame = vidcap.read()
     frame_count = 0
-    task_id = random.randint(0, 9)
-    # task_id=1
+    # task_id = random.randint(0, 1000)
+    task_id=uuid.uuid4()
+    task_id=str(task_id)
     # Initial frame_id
     frame_id = 1
 
@@ -118,6 +121,8 @@ def process_video_route():
     send_kafka(task_id)
     cursor.close()
     conn.close()
+    time.sleep(20)
+    construct_vid(task_id)
     return f"Video processed successfully. {frame_count} frames stored in the database."
 
 

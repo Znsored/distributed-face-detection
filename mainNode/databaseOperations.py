@@ -21,7 +21,7 @@ def store_processed_frames(task_id, frame_id, time_taken, worker_id, frame_data)
             host="localhost",
             port="5432")
         cursor = connection.cursor()
-        cursor.execute("INSERT INTO frames(task_id,frame_id,time_taken, woker_id, image) VALUES (%s,%s, %s, %s, %s)", (task_id,frame_id, time_taken, worker_id, frame_data))
+        cursor.execute("INSERT INTO frames(task_id,frame_id,time_taken, worker_id, image) VALUES (%s,%s, %s, %s, %s)", (task_id,frame_id, time_taken, worker_id, frame_data))
         connection.commit()
     except (Exception, psycopg2.Error) as error:
         logging.info("Failed to insert processed frame into database", error)
