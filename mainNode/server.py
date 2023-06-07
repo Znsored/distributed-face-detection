@@ -1,7 +1,8 @@
 import json
 import base64
 from confluent_kafka import Producer
-#from storeResponse import start_consuming
+import os
+from flask import Flask, render_template, request
 import time
 import psycopg2
 import cv2
@@ -11,8 +12,13 @@ from dotenv import dotenv_values
 import random
 from constructvideo import construct_vid
 from storeResponse import start_consuming
+
+
+
 # Create a Flask app
 app = Flask(__name__)
+
+app.config['UPLOAD_FOLDER'] = './'
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect("dbname=frames_get user=postgres password=root")
@@ -80,53 +86,68 @@ def store_frame(task_id, frame_id, frame_data):
     # Insert the frame into the table with the provided frame_id
     cursor.execute("INSERT INTO save_frames (task_id, frame_id, image) VALUES (%s, %s, %s)", (task_id,frame_id, frame_data))
 
-@app.route('/process_video', methods=['POST'])
-def process_video_route():
-    if 'video' not in request.files:
-        return "No video file provided", 400
 
-    video_file = request.files['video']
-    video_path = 'uploaded_video.mp4'
-    video_file.save(video_path)
 
-    # Process the video
-    vidcap = cv2.VideoCapture(video_path)
-    success, frame = vidcap.read()
-    frame_count = 0
-    # task_id = random.randint(0, 1000)
-    task_id=uuid.uuid4()
-    task_id=str(task_id)
-    # Initial frame_id
-    frame_id = 1
 
-    while success:
-        # Convert the frame to bytes
-        _, buffer = cv2.imencode('.jpg', frame)
-        frame_data = buffer.tobytes()
 
-        # Store the frame in the database with the current frame_id
-        store_frame(task_id, frame_id, frame_data)
 
-        # Read the next frame
+@app.route('/', methods=["GET", "POST"])
+def index():
+    if request.method == "GET":
+        return render_template("index.html", result={})
+    else:
+        if 'video' not in request.files:
+            return "No video file provided", 400
+
+        video_file = request.files['video']
+        video_path = 'uploaded_video.mp4'
+        video_file.save(video_path)
+
+        # Process the video
+        vidcap = cv2.VideoCapture(video_path)
         success, frame = vidcap.read()
-        frame_count += 1
+        frame_count = 0
+        # task_id = random.randint(0, 1000)
+        task_id=uuid.uuid4()
+        task_id=str(task_id)
+        # Initial frame_id
+        frame_id = 1
 
-        # Increment the frame_id
-        frame_id += 1
+        while success:
+        # Convert the frame to bytes
+            _, buffer = cv2.imencode('.jpg', frame)
+            frame_data = buffer.tobytes()
 
-    # Commit the transaction
-    conn.commit()
+            # Store the frame in the database with the current frame_id
+            store_frame(task_id, frame_id, frame_data)
 
-    # Close the video capture, cursor, and connection
-    vidcap.release()
-    send_kafka(task_id)
-    cursor.close()
-    conn.close()
-    # time.sleep(20)
-    #construct_vid(task_id)
-    return f"Video processed successfully. {frame_count} frames stored in the database."
+            # Read the next frame
+            success, frame = vidcap.read()
+            frame_count += 1
+
+            # Increment the frame_id
+            frame_id += 1
+
+        # Commit the transaction
+        conn.commit()
+
+        # Close the video capture, cursor, and connection
+        vidcap.release()
+        send_kafka(task_id)
+        cursor.close()
+        conn.close()
+        # time.sleep(20)
+        #construct_vid(task_id)
+        os.remove(path)
+        return render_template("index.html", result="done")
+        
+
+        
+
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
 
 
 
-if __name__ == "__main__":
-    app.run(port=5000)
