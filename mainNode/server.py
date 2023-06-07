@@ -122,7 +122,7 @@ def process_video_route():
     cursor.close()
     conn.close()
     time.sleep(20)
-    construct_vid(task_id)
+    #construct_vid(task_id)
     return f"Video processed successfully. {frame_count} frames stored in the database."
 
 
