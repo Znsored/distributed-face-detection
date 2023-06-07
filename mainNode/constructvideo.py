@@ -42,15 +42,20 @@ for record in cursor:
 cursor.close()
 connection.close()
 
-# Create a VideoWriter object to construct the video
-output_file = 'output_video.mp4'
-frame_rate = 30
-frame_width, frame_height = frames[0][1].shape[:2]
-output_video = cv2.VideoWriter(output_file, cv2.VideoWriter_fourcc(*'mp4v'), frame_rate, (frame_width, frame_height))
+# Specify the desired frame size
+frame_width = 1280
+frame_height = 720
 
-# Iterate over the frames and add them to the video
+# Create a VideoWriter object to construct the video
+output_file = 'output_video.avi'
+frame_rate = 30
+fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+output_video = cv2.VideoWriter(output_file, fourcc, frame_rate, (frame_width, frame_height))
+
+# Iterate over the frames, resize them, and add them to the video
 for frame_id, image in frames:
-    output_video.write(image)
+    resized_image = cv2.resize(image, (frame_width, frame_height))
+    output_video.write(resized_image)
 
 # Release the VideoWriter
 output_video.release()
