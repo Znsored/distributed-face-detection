@@ -50,7 +50,7 @@ def send_kafka(task_id):
     topic = 'request'
 
     #select_query = ""
-    cursor.execute("SELECT image FROM init_frames WHERE task_id = (task_id) VALUES (%s)",(task_id))
+    cursor.execute("SELECT image FROM save_frames WHERE task_id = task_id")
     result = cursor.fetchall()
     count = 0
 
@@ -75,7 +75,7 @@ def send_kafka(task_id):
 
 def store_frame(task_id, frame_id, frame_data):
     # Insert the frame into the table with the provided frame_id
-    cursor.execute("INSERT INTO init_frames (task_id, frame_id, image) VALUES (%s, %s, %s)", (task_id,frame_id, frame_data))
+    cursor.execute("INSERT INTO save_frames (task_id, frame_id, image) VALUES (%s, %s, %s)", (task_id,frame_id, frame_data))
 
 @app.route('/process_video', methods=['POST'])
 def process_video_route():
@@ -90,8 +90,8 @@ def process_video_route():
     vidcap = cv2.VideoCapture(video_path)
     success, frame = vidcap.read()
     frame_count = 0
-    task_id = uuid.uuid4()
-
+    # task_id = uuid.uuid4()
+    task_id=1
     # Initial frame_id
     frame_id = 1
 
@@ -119,6 +119,7 @@ def process_video_route():
     cursor.close()
     conn.close()
     return f"Video processed successfully. {frame_count} frames stored in the database."
+    
 
 
 if __name__ == "__main__":
