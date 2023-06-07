@@ -8,7 +8,7 @@ import cv2
 import uuid
 from flask import Flask, request
 from dotenv import dotenv_values
-
+import random
 # Create a Flask app
 app = Flask(__name__)
 
@@ -33,7 +33,7 @@ producer_config = {
     'client.id': 'fresh_frame_producer'
 }
 
-# # Create the Kafka producer instance
+# Create the Kafka producer instance
 
 producer = Producer(producer_config)
 
@@ -90,8 +90,8 @@ def process_video_route():
     vidcap = cv2.VideoCapture(video_path)
     success, frame = vidcap.read()
     frame_count = 0
-    # task_id = uuid.uuid4()
-    task_id=1
+    task_id = random.randint(0, 9)
+    # task_id=1
     # Initial frame_id
     frame_id = 1
 
@@ -119,7 +119,7 @@ def process_video_route():
     cursor.close()
     conn.close()
     return f"Video processed successfully. {frame_count} frames stored in the database."
-    
+
 
 
 if __name__ == "__main__":

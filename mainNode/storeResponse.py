@@ -55,7 +55,7 @@ def start_consuming():
         try:
             job_data = json.loads(json_message)
         except json.JSONDecodeError as e:
-        #print(f"Error decoding JSON message: {e}")
+        # print(f"Error decoding JSON message: {e}")
             continue
         frame_id = job_data['frame_id']
         image_base64 = job_data['image']

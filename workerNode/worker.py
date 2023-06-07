@@ -77,6 +77,7 @@ while True:
 
     # Prepare the acknowledgment data in JSON format
     ack_data = {
+        'task_id':task_id,
         'frame_id': frame_id,
         'time_taken': time_taken,
         'worker_id': machine_id,
