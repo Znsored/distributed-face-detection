@@ -10,8 +10,11 @@
         Your browser does not support the video tag.
     </video>
     <h2>Statistics</h2>
-    <p>Task ID: {{ stats.task_id }}</p>
-    <p>Total Frames: {{ stats.total_frames }}</p>
+    {% for record in stats %}
+    <p>WORKER ID: {{ record.worker_id }}</p>
+    <p>TOTAL FRAMES PROCESSED: {{ record.frames_processed }}</p>
+    <p>AVERAGE TIME TAKEN: {{ record.time_taken }}</p><br>
+    {% endfor %}
     <!-- Add more statistics as needed -->
 </body>
 </html>

@@ -95,7 +95,7 @@ def get_statistics(task_id):
             worker_id = record[0]
             time_taken = record[1]
             frames_processed = record[2]
-            stats.append({'worker_id':worker_id , 'time_taken' : time_taken, frames_processed:frames_processed})
+            stats.append({'worker_id':worker_id , 'time_taken' : time_taken, 'frames_processed':frames_processed})
     except (Exception, psycopg2.Error) as error:
         logging.info("Failed to read from database", error)
     finally:

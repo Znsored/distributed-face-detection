@@ -13,6 +13,9 @@ import random
 from constructvideo import construct_vid
 from storeResponse import start_consuming
 from databaseOperations import get_statistics
+import logging
+
+logging.basicConfig(level = logging.INFO)
 
 
 
@@ -143,6 +146,7 @@ def index():
         #upload_path = os.path.join('static', output_file)
         # path={'upload_path':'workerNode\\video.mp4'}  # Path to your video file
         stats = get_statistics(task_id)
+        logging.info(stats)
         return render_template("showvid.html", upload_path=output_file,stats=stats)
         
 
