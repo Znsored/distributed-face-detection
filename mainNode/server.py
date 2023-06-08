@@ -19,7 +19,7 @@ from databaseOperations import get_statistics
 # Create a Flask app
 app = Flask(__name__)
 
-app.config['UPLOAD_FOLDER'] = './'
+app.config['UPLOAD_FOLDER'] = './mainNode/templates'
 
 # Connect to the PostgreSQL database
 conn = psycopg2.connect("dbname=frames_get user=postgres password=root")
@@ -101,11 +101,12 @@ def index():
         #     return "No video file provided", 400
 
         video_file = request.files['video']
-        video_path = 'uploaded_video.mp4'
-        video_file.save(video_path)
+        # video_path = 'uploaded_video.mp4'
+        video_file_path=os.path.join(app.config['UPLOAD_FOLDER'],'uploaded_video.mp4'.replace("\\", "/"))
+        video_file.save(video_file_path)
 
         # Process the video
-        vidcap = cv2.VideoCapture(video_path)
+        vidcap = cv2.VideoCapture(video_file_path)
         success, frame = vidcap.read()
         frame_count = 0
         # task_id = random.randint(0, 1000)
@@ -137,10 +138,11 @@ def index():
         send_kafka(task_id)
         cursor.close()
         conn.close()
-        
-        video_path = 'video.avi'  # Path to your video file
+        output_file='./templates/video.mp4'
+        #upload_path = os.path.join('static', output_file)
+        # path={'upload_path':'workerNode\\video.mp4'}  # Path to your video file
         stats = get_statistics(task_id)
-        return render_template("index.html", result=video_path, stats = stats)
+        return render_template("index.html", result={'upload_path':output_file}, stats = stats)
         
 
         

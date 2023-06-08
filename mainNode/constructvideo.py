@@ -1,6 +1,7 @@
 import cv2
 import psycopg2
 import numpy as np
+import subprocess
 
 def construct_vid(task_id):
     # Database connection details
@@ -13,49 +14,65 @@ def construct_vid(task_id):
     cursor = connection.cursor()
 
     # Execute the query
-    cursor.execute( "SELECT frame_id, image FROM frames WHERE task_id=(%s) ORDER BY frame_id",(task_id,))
+    cursor.execute("SELECT  image FROM frames WHERE task_id =(%s) ORDER BY frame_id",(task_id,))
 
     # Initialize variables
-    frame_count = 0
     frames = []
 
     # Iterate over the database records
     for record in cursor:
-        frame_id = record[0]
-        image_bytes = record[1]
 
-        # Convert the image bytes to a NumPy array
+        image_bytes = record[0]
+
+        # Convert the bytea image to a NumPy array
         nparr = np.frombuffer(image_bytes, np.uint8)
 
         # Decode the NumPy array as an image using OpenCV
         image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
-        # Add the frame ID and image to the list
-        frames.append((frame_id, image))
+        # Process the image here (if required)
+        processed_image = image
 
-        # Increment frame count
-        frame_count += 1
+        # Add the processed image to the list
+        frames.append(processed_image)
 
     # Release the database cursor and close the connection
     cursor.close()
     connection.close()
 
-    # Specify the desired frame size
-    frame_width = 1280
-    frame_height = 720
+    # Construct the video using FFmpeg
+    construct_video(frames)
 
-    # Create a VideoWriter object to construct the video
-    output_file = 'output_video.avi'
-    frame_rate = 30
-    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-    output_video = cv2.VideoWriter(output_file, fourcc, frame_rate, (frame_width, frame_height))
+def construct_video(input_images):
+    # Get the frame width and height from the first image
+    frame_width = input_images[0].shape[1]
+    frame_height = input_images[0].shape[0]
+    output_file='./mainNode/templates/video.mp4'
+    # Construct the FFmpeg command
+    command = [
+        'ffmpeg',
+        '-r', str(30),
+        '-f', 'rawvideo',
+        '-s', f'{frame_width}x{frame_height}',
+        '-pix_fmt', 'bgr24',
+        '-i', '-',
+        '-c:v', 'libx264',
+        '-pix_fmt', 'yuv420p',
+        '-crf', '18',
+        '-y',
+        output_file
+    ]
 
-    # Iterate over the frames, resize them, and add them to the video
-    for frame_id, image in frames:
-        resized_image = cv2.resize(image, (frame_width, frame_height))
-        output_video.write(resized_image)
+    # Start the FFmpeg process
+    ffmpeg_process = subprocess.Popen(command, stdin=subprocess.PIPE)
 
-    # Release the VideoWriter
-    output_video.release()
+    # Write the input images to the FFmpeg process
+    for image in input_images:
+        ffmpeg_process.stdin.write(image.tobytes())
+
+    # Close the FFmpeg process
+    ffmpeg_process.stdin.close()
+    ffmpeg_process.wait()
 
     print(f"Video constructed successfully. Output file: {output_file}")
+

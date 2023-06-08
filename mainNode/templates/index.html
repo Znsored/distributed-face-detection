@@ -17,8 +17,11 @@
             <p>{{ result.error }}</p>
         {% elif result %}
             <!-- <p><img src="{{ result.image_with_landmarks }}" alt="face with landmarks"/></p> -->
-            <p><source src="{{ video_path }}" type="video/avi"></p>
+            <p><video controls>
+                <source src="{{ result.video_path }}" type="video/avi">
+            </video></p>
             <h1>Statistics:</h1>
+            <p>{{ result.video_path }}</p>
                 {% for record in stats%}
                 <h2>Worker ID: {{ record.worker_id }}</h2>
                 <p>Number of Frames Processed: {{ record.frames_processed }}</p>
