@@ -102,6 +102,7 @@ def index():
 
         video_file = request.files['video']
         # video_path = 'uploaded_video.mp4'
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
         video_file_path=os.path.join(app.config['UPLOAD_FOLDER'],'uploaded_video.mp4'.replace("\\", "/"))
         video_file.save(video_file_path)
 
@@ -138,11 +139,11 @@ def index():
         send_kafka(task_id)
         cursor.close()
         conn.close()
-        output_file='./templates/video.mp4'
+        output_file='./video.mp4'
         #upload_path = os.path.join('static', output_file)
         # path={'upload_path':'workerNode\\video.mp4'}  # Path to your video file
         stats = get_statistics(task_id)
-        return render_template("index.html", result={'upload_path':output_file}, stats = stats)
+        return render_template("showvid.html", upload_path=output_file,stats=stats)
         
 
         

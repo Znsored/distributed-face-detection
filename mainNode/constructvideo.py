@@ -47,7 +47,7 @@ def construct_video(input_images):
     # Get the frame width and height from the first image
     frame_width = input_images[0].shape[1]
     frame_height = input_images[0].shape[0]
-    output_file='./mainNode/templates/video.mp4'
+    output_file='./mainNode/static/video.mp4'
     # Construct the FFmpeg command
     command = [
         'ffmpeg',

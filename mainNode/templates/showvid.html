@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Playback</title>
+</head>
+<body>
+    <h1>Video Playback</h1>
+    <video width="640" height="480" controls>
+        <source src="{{ url_for('static', filename=upload_path) }}" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <h2>Statistics</h2>
+    <p>Task ID: {{ stats.task_id }}</p>
+    <p>Total Frames: {{ stats.total_frames }}</p>
+    <!-- Add more statistics as needed -->
+</body>
+</html>
