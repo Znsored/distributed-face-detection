@@ -3,14 +3,6 @@ import logging
 
 logging.basicConfig(level=logging.INFO)
 
-# Connect to the PostgreSQL database
-# conn = psycopg2.connect(
-#     database="frames_get",
-#     user="postgres",
-#     password="root",
-#     host="localhost",
-#     port="5432",
-# )
 
 def store_processed_frames(task_id, frame_id, time_taken, worker_id, frame_data):
     try:

@@ -1,13 +1,14 @@
-from confluent_kafka.admin import AdminClient, NewTopic, Consumer
+from confluent_kafka.admin import AdminClient, NewTopic
 from dotenv import dotenv_values
+from confluent_kafka import Consumer
 
     # Server configuration
 string_template = "{ip}:{port}"
 env_vars = dotenv_values('.env')
 
 
-ip = env_vars["IP"]
-port = env_vars["PORT"]
+ip = "172.31.167.144"
+port = "9093"
 bootstrap_servers = string_template.format(ip=ip, port=port)
 
 
@@ -34,7 +35,7 @@ def create_topic(topic_name, num_partitions, replication_factor):
     
     
     # Create the topic using the AdminClient
-    admin_client.create_topics(topic)
+    admin_client.create_topics([topic])
 
     #list all topics
     consumer.list_topics().topics
@@ -50,4 +51,4 @@ consummer_config = {
     'group.id': 'check_topics'
 }
 consumer = Consumer(consummer_config)
-consumer.list_topics().topics
+print(consumer.list_topics().topics)

@@ -16,7 +16,7 @@ def start_consuming():
     env_vars = dotenv_values('mainNode/.env')
 
 
-    ip = "10.0.0.22"
+    ip = "172.31.167.144"
     port = "9093"
 
     # Kafka broker(s) configuration
