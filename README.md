@@ -2,10 +2,10 @@
 A distributed system that detects faces in a video and draws Delaunay triangles over it.
 
 ## Features
-**Easy Setup**, Seamless installation process through Docker images.
-**Highly Scalable**, Easily scale the number of worker nodes to match your desired workload with minimal configuration changes.
-**Handles Multiple Tasks**, Capable of efficiently handling multiple video requests simultaneously.
-***Robust Logging***, Incorporates comprehensive logging functionalities to track and monitor activities effectively.
+* **Easy Setup**, Seamless installation process through Docker images.
+* **Highly Scalable**, Easily scale the number of worker nodes to match your desired workload with minimal configuration changes.
+* **Handles Multiple Tasks**, Capable of efficiently handling multiple video requests simultaneously.
+* **Robust Logging***, Incorporates comprehensive logging functionalities to track and monitor activities effectively.
 
 ## Setup 
 ### Requirements
